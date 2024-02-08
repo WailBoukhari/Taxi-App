@@ -34,29 +34,27 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role_id' => ['required', 'in:1,2'], // Validate role selection (assuming role IDs are 1 and 2)
-
         ]);
-        $role = $request->role;
 
+        // Create a new user
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
         // Assign role based on user selection
-        $user->assignRole($request->role_id == 1 ? 'passenger' : 'driver');
+        $role = $request->role_id == 1 ? 'passenger' : 'driver';
+        $user->assignRole($role);
 
         event(new Registered($user));
 
         Auth::login($user);
 
         // Redirect the user based on their role
-        if ($request->role_id == 1) {
-            return redirect()->route('passenger.dashboard'); // Redirect passenger to passenger dashboard
-        } else {
-            return redirect()->route('driver.dashboard'); // Redirect driver to driver dashboard
-        }    }
+        return redirect()->route($role . '.dashboard');
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ScheduledRide;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -19,9 +20,25 @@ class ScheduledRideController extends Controller
         return view('search-results', compact('scheduledRides'));
     }
 
-    public function confirmBooking(ScheduledRide $ride)
+
+
+    public function viewReceipt(Request $request)
     {
-        return view('scheduled-rides.confirm-booking', compact('ride'));
+        $rideId = $request->input('ride_id');
+        $ride = ScheduledRide::find($rideId);
+
+        if (!$ride) {
+            abort(404, 'Ride not found');
+        }
+
+        $passenger = Auth::user();
+        $barcode = $this->generateBarcode($ride, $passenger);
+
+        return view('scheduled-rides.view-receipt', [
+            'ride' => $ride,
+            'passenger' => $passenger,
+            'barcode' => $barcode,
+        ]);
     }
 
     private function searchScheduledRides($departureCity, $destinationCity)
@@ -39,41 +56,15 @@ class ScheduledRideController extends Controller
         return $query->get();
     }
 
-    public function viewReceipt(Request $request)
-    {
-        $rideId = $request->input('ride_id');
-        $ride = ScheduledRide::find($rideId);
-        $passenger = Auth::user();
-
-        // Generate barcode using ride and passenger information
-        $barcode = $this->generateBarcode($ride, $passenger);
-
-        return view('scheduled-rides.view-receipt', [
-            'ride' => $ride,
-            'passenger' => $passenger,
-            'barcode' => $barcode, // Pass the barcode variable to the view
-        ]);
-    }
-
     private function generateBarcode($ride, $passenger)
     {
-        // Construct the barcode data in JSON format
-        $barcodeData = [
-            'ride' => [
-                'driver_name' => $ride->driver_name,
-                'departure_city' => $ride->departure_city_name,
-                'destination_city' => $ride->destination_city_name,
-            ],
-            'passenger' => [
-                'name' => $passenger->name,
-                'email' => $passenger->email,
-            ],
+        $data = [
+            'ride_id' => $ride->id,
+            'passenger_id' => $passenger->id,
+            'driver_name' => $ride->driver_name,
+            // Add more ride and passenger details here
         ];
 
-        // Convert the data to JSON format
-        $jsonBarcodeData = json_encode($barcodeData);
-
-        // Generate barcode using JSON data
-        return QrCode::size(300)->generate($jsonBarcodeData);
+        return QrCode::size(300)->generate(json_encode($data));
     }
 }

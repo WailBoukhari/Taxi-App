@@ -7,31 +7,28 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Spatie\Permission\Models\Role;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Driver>
- */
 class DriverFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string  
-     */
     protected $model = Driver::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
     public function definition()
     {
         $user = User::factory()->create();
         $user->assignRole(Role::findByName('driver'));
 
+        $faker = \Faker\Factory::create();
+
+        // Generate a random vehicle brand
+        $vehicleBrand = $faker->randomElement(['Dacia', 'Meridic', 'Pigo']);
+
+        // Generate a random license plate
+        $licensePlate = strtoupper($faker->lexify('??####'));
+
         return [
             'user_id' => $user->id,
             'name' => $user->name,
+            'vehicle_brand' => $vehicleBrand,
+            'license_number' => $licensePlate,
         ];
     }
 }

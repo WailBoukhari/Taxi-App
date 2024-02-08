@@ -5,8 +5,10 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\PassengerController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ScheduledRideController;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -37,6 +39,10 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
 
 Route::middleware(['auth', 'role:Passenger'])->group(function () {
     Route::get('/passenger/dashboard', [PassengerController::class, 'dashboard'])->name('passenger.dashboard');
+    Route::get('/passenger/frequent-routes', [PassengerController::class, 'frequentRoutes'])->name('passenger.frequent-routes');
+    Route::get('/passenger/reservation', [ReservationController::class, 'index'])->name('reservations.index');
+
+
 });
 
 Route::middleware(['auth', 'role:Driver'])->group(function () {
@@ -51,12 +57,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/search', [ScheduledRideController::class, 'showSearchResults'])->name('search');
 
 
-    Route::get('/scheduled-rides/{ride}/confirm-booking', [ScheduledRideController::class, 'confirmBooking'])
+    Route::get('/scheduled-rides/{ride}/confirm-booking', [ReservationController::class, 'confirmBooking'])
         ->name('scheduled-rides.confirm-booking');
 
     Route::post('/scheduled-rides/{ride}/receipt', [ScheduledRideController::class, 'viewReceipt'])
-    ->name('scheduled-rides.view-receipt');
-
+        ->name('scheduled-rides.view-receipt');
 
 });
 
