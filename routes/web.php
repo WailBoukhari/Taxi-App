@@ -41,6 +41,7 @@ Route::middleware(['auth', 'role:Passenger'])->group(function () {
     Route::get('/passenger/dashboard', [PassengerController::class, 'dashboard'])->name('passenger.dashboard');
     Route::get('/passenger/frequent-routes', [PassengerController::class, 'frequentRoutes'])->name('passenger.frequent-routes');
     Route::get('/passenger/reservation', [ReservationController::class, 'index'])->name('reservations.index');
+    Route::delete('/reservations/{reservation}', [ReservationController::class, 'cancel'])->name('reservations.cancel');
 
 
 });

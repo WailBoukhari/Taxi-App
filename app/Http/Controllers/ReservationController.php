@@ -39,14 +39,16 @@ class ReservationController extends Controller
         return view('reservations.index', compact('reservations'));
     }
 
-    public function cancel(Reservation $reservation)
+    public function cancel(Request $request, Reservation $reservation)
     {
-        // Check if reservation was made within the last 24 hours
-        if ($reservation->created_at->diffInHours(Carbon::now()) <= 24) {
-            $reservation->delete();
-            return redirect()->back()->with('success', 'Reservation cancelled successfully.');
-        } else {
-            return redirect()->back()->with('error', 'Cannot cancel reservation after 24 hours.');
+        // Check if the authenticated user owns the reservation
+        if ($reservation->passenger_id !== auth()->id()) {
+            abort(403, 'Unauthorized');
         }
+
+        // Cancel the reservation
+        $reservation->delete();
+
+        return redirect()->back()->with('success', 'Reservation canceled successfully.');
     }
-}   
+}
