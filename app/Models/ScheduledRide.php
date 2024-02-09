@@ -10,9 +10,9 @@ class ScheduledRide extends Model
     use HasFactory;
     protected $fillable = ['departure_city_name', 'destination_city_name'];
 
-    public function bookings()
+    public function scheduledRides()
     {
-        return $this->hasMany(Booking::class);
+        return $this->hasMany(ScheduledRide::class);
     }
 }
 

@@ -17,4 +17,5 @@ class Passenger extends Model
     {
         return $this->hasMany(Reservation::class);
     }
+
 }

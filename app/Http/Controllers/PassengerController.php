@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\FrequentRoute;
 use App\Models\Reservation;
+use App\Models\ScheduledRide;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 class PassengerController extends Controller
 {
-    public function dashboard() {
+    public function dashboard()
+    {
         return view("passenger.dashboard");
     }
 
@@ -39,5 +42,17 @@ class PassengerController extends Controller
 
         return view('passenger.frequent-routes', compact('sortedFrequentRoutes'));
     }
+    public function searchSavedRoute(FrequentRoute $route)
+    {
+        // Retrieve the details of the saved route
+        $departureCity = $route->departure_city;
+        $destinationCity = $route->destination_city;
 
+        // Perform a search based on the saved route details
+        $scheduledRides = $this->searchScheduledRides($departureCity, $destinationCity);
+
+        // Pass the search results to the view
+        return view('scheduled-ride', compact('scheduledRides'));
+    }
+ 
 }

@@ -49,13 +49,15 @@ Route::middleware(['auth', 'role:Passenger'])->group(function () {
 Route::middleware(['auth', 'role:Driver'])->group(function () {
     Route::get('/driver/dashboard', [DriverController::class, 'dashboard'])->name('driver.dashboard');
 });
-
+Route::post('/scheduled-rides/{ride}/favorite', [ScheduledRideController::class, 'favoriteScheduledRide'])
+    ->name('scheduled-rides.favorite');
+Route::get('/search-frequent-route/{departure_city}/{destination_city}', [ScheduledRideController::class, 'searchFrequentRoute'])->name('search-frequent-route');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 Route::middleware(['auth'])->group(function () {
-    Route::get('/search', [ScheduledRideController::class, 'showSearchResults'])->name('search');
+    Route::get('/scheduled-ride', [ScheduledRideController::class, 'showSearchResults'])->name('scheduled-ride');
 
 
     Route::get('/scheduled-rides/{ride}/confirm-booking', [ReservationController::class, 'confirmBooking'])

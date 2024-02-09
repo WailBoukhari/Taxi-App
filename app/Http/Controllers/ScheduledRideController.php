@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\ScheduledRide;
-use App\Models\Reservation;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -17,7 +17,7 @@ class ScheduledRideController extends Controller
 
         $scheduledRides = $this->searchScheduledRides($departureCity, $destinationCity);
 
-        return view('search-results', compact('scheduledRides'));
+        return view('scheduled-ride', compact('scheduledRides'));
     }
 
 
@@ -62,9 +62,16 @@ class ScheduledRideController extends Controller
             'ride_id' => $ride->id,
             'passenger_id' => $passenger->id,
             'driver_name' => $ride->driver_name,
-            // Add more ride and passenger details here
         ];
 
         return QrCode::size(300)->generate(json_encode($data));
+    }
+    public function searchFrequentRoute($departureCity, $destinationCity)
+    {
+        // Perform a search based on the frequent route details
+        $scheduledRides = $this->searchScheduledRides($departureCity, $destinationCity);
+
+        // Pass the search results to the view
+        return view('scheduled-ride', compact('scheduledRides'));
     }
 }

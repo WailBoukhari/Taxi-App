@@ -31,6 +31,7 @@
                                     Unavailable
                                 </button>
                             @endif
+
                             <hr class="my-4 border-gray-700">
                         </div>
                     @endforeach

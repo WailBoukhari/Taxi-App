@@ -5,7 +5,7 @@
                 <div class="px-6 py-4 bg-gray-900 text-white font-bold">Search for a Taxi</div>
 
                 <div class="px-6 py-4 bg-gray-800">
-                    <form action="{{ route('search') }}" method="GET">
+                    <form action="{{ route('scheduled-ride') }}" method="GET">
 
                         <div class="mb-4">
                             <livewire:city-search />
