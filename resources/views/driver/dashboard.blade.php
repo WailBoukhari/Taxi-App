@@ -10,6 +10,15 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     {{ __("You're logged in!") }}
+
+                    @if (!Auth::user()->isActive())
+                        <form action="{{ route('complete-account') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                                Complete Account
+                            </button>
+                        </form>
+                    @endif
                 </div>
             </div>
         </div>

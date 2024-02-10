@@ -45,11 +45,9 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-
         // Assign role based on user selection
         $role = $request->role_id == 1 ? 'passenger' : 'driver';
         $user->assignRole($role);
-
         event(new Registered($user));
 
         Auth::login($user);

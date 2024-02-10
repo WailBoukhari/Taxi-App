@@ -48,6 +48,8 @@ Route::middleware(['auth', 'role:Passenger'])->group(function () {
 
 Route::middleware(['auth', 'role:Driver'])->group(function () {
     Route::get('/driver/dashboard', [DriverController::class, 'dashboard'])->name('driver.dashboard');
+    Route::get('/driver/complete-account', [DriverController::class, 'completeAccount'])->name('driver.complete-account');
+
 });
 Route::post('/scheduled-rides/{ride}/favorite', [ScheduledRideController::class, 'favoriteScheduledRide'])
     ->name('scheduled-rides.favorite');

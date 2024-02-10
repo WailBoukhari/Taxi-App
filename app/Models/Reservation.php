@@ -26,4 +26,8 @@ class Reservation extends Model
     {
         return $this->belongsTo(Passenger::class);
     }
+    public function scheduledRide()
+    {
+        return $this->belongsTo(ScheduledRide::class, 'scheduled_ride_id');
+    }
 }
