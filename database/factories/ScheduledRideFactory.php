@@ -22,7 +22,7 @@ class ScheduledRideFactory extends Factory
         $destinationCity = City::inRandomOrder()->first()->name;
 
         return [
-            'driver_name' => $driver->name,
+            'driver_id' => $driver->id,
             'departure_city_name' => $departureCity,
             'destination_city_name' => $destinationCity,
             'vehicle_type' => $driver->vehicle_type,

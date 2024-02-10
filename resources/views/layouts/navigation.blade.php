@@ -30,6 +30,7 @@
                                 class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                         </a>
                     </div>
+
                 @endif
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
@@ -60,6 +61,13 @@
                         <x-nav-link :href="route('driver.dashboard')" :active="request()->routeIs('driver.dashboard')">
                             {{ __('Driver Dashboard') }}
                         </x-nav-link>
+                        
+                    @if (Auth::user()->driver && Auth::user()->driver->isActive())
+                
+                           <x-nav-link :href="route('driver.schedule.index')" :active="request()->routeIs('driver.schedule.index')">
+                            {{ __('Create Schedule') }}
+                        </x-nav-link>
+                    @endif
                     @endif
                 </div>
             </div>
@@ -84,10 +92,25 @@
                     </x-slot>
 
                     <x-slot name="content">
-
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
+                        <!-- Check if the user is a driver -->
+                        @if (Auth::user()->hasRole('Driver'))
+                            <x-dropdown-link :href="route('profile.edit')">
+                                {{ __('Profile') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('driver.driver-profile')">
+                                {{ __('Driver Profile') }}
+                            </x-dropdown-link>
+                        @endif <!-- Check if the user is a driver -->
+                        @if (Auth::user()->hasRole('Admin'))
+                            <x-dropdown-link :href="route('profile.edit')">
+                                {{ __('Profile') }}
+                            </x-dropdown-link>
+                        @endif <!-- Check if the user is a driver -->
+                        @if (Auth::user()->hasRole('Passenger'))
+                            <x-dropdown-link :href="route('profile.edit')">
+                                {{ __('Profile') }}
+                            </x-dropdown-link>
+                        @endif
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
@@ -147,20 +170,33 @@
             </div>
 
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
 
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                        onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                @if (Auth::user()->hasRole('Admin'))
+                    <x-responsive-nav-link :href="route('profile.edit')">
+                        {{ __('Profile') }}
                     </x-responsive-nav-link>
-                </form>
+                    @endif @if (Auth::user()->hasRole('Passenger'))
+                        <x-responsive-nav-link :href="route('profile.edit')">
+                            {{ __('Profile') }}
+                        </x-responsive-nav-link>
+                        @endif @if (Auth::user()->hasRole('Driver'))
+                            <x-responsive-nav-link :href="route('profile.edit')">
+                                {{ __('Profile') }}
+                            </x-responsive-nav-link>
+                            <x-responsive-nav-link :href="route('driver.driver-profile')">
+                                {{ __('Driver Profile') }}
+                            </x-responsive-nav-link>
+                        @endif
+                        <!-- Authentication -->
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+
+                            <x-responsive-nav-link :href="route('logout')"
+                                onclick="event.preventDefault();
+                                        this.closest('form').submit();">
+                                {{ __('Log Out') }}
+                            </x-responsive-nav-link>
+                        </form>
             </div>
         </div>
     </div>

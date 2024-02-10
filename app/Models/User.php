@@ -54,8 +54,5 @@ class User extends Authenticatable
     {
         return $this->hasOne(Driver::class);
     }
-    public function isActive()
-    {
-        return $this->is_active;
-    }
+
 }

@@ -48,8 +48,28 @@ Route::middleware(['auth', 'role:Passenger'])->group(function () {
 
 Route::middleware(['auth', 'role:Driver'])->group(function () {
     Route::get('/driver/dashboard', [DriverController::class, 'dashboard'])->name('driver.dashboard');
-    Route::get('/driver/complete-account', [DriverController::class, 'completeAccount'])->name('driver.complete-account');
+    Route::get('/driver/complete-account', [DriverController::class, 'completeAccountForm'])
+        ->name('driver.complete-account-form');
+    Route::post('/driver/complete-account', [DriverController::class, 'completeAccount'])
+        ->name('driver.complete-account');
+    Route::get('/driver/driver-profile', [DriverController::class, 'driverProfile'])
+        ->name('driver.driver-profile');
+    Route::get('/driver/edit-profile', [DriverController::class, 'editProfileForm'])
+        ->name('driver.edit-profile');
+    Route::post('/driver/update-profile', [DriverController::class, 'updateProfile'])
+        ->name('driver.update-profile');
+    Route::get('driver/driver-schedule', [ScheduledRideController::class, 'indexSchedule'])->name('driver.schedule.index');
 
+    Route::get('/schedules/create', [ScheduledRideController::class, 'createSchedule'])->name('driver.schedule.create');
+
+    Route::post('/schedules/store', [ScheduledRideController::class, 'storeSchedule'])->name('driver.schedule.store');
+
+    Route::get('/schedules/edit', [ScheduledRideController::class, 'editSchedule'])->name('driver.schedule.edit');
+
+    Route::post('/schedules/{id}', [ScheduledRideController::class, 'updateSchedule'])->name('driver.schedule.update');
+
+    Route::delete('/schedules/{id}', [ScheduledRideController::class, 'destroySchedule'])->name('driver.schedule.destroy');
+    
 });
 Route::post('/scheduled-rides/{ride}/favorite', [ScheduledRideController::class, 'favoriteScheduledRide'])
     ->name('scheduled-rides.favorite');

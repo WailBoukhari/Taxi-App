@@ -18,7 +18,6 @@ class PassengerFactory extends Factory
 
         return [
             'user_id' => $user->id,
-            'name' => $user->name,
         ];
     }
 }

@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('drivers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->string('profile_picture')->nullable();
             $table->text('description')->nullable();
             $table->string('license_number')->nullable();
             $table->string('license_plate')->nullable();
             $table->string('vehicle_brand')->nullable();
             $table->enum('status', ['inactive', 'active'])->default('inactive');
+            $table->enum('availability', ['available', 'unavailable'])->default('unavailable');
+            $table->enum('payment_method', ['cash', 'card', 'other'])->default('cash');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

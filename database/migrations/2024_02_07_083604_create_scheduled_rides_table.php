@@ -10,7 +10,7 @@ class CreateScheduledRidesTable extends Migration
     {
         Schema::create('scheduled_rides', function (Blueprint $table) {
             $table->id();
-            $table->string('driver_name')->nullable();
+            $table->foreignId('driver_id')->constrained()->onDelete('cascade');
             $table->string('departure_city_name'); 
             $table->string('destination_city_name');
             $table->string('vehicle_type')->nullable();
