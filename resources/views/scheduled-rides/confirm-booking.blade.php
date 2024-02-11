@@ -13,10 +13,10 @@
                 <div class="p-6 bg-gray-800 border-b border-gray-700 text-white">
                     <h3 class="text-lg font-semibold">Confirmation Details</h3>
                     <!-- Display confirmation details here -->
-                    <p>Driver Name: {{ $ride->driver_name }}</p>
+                    <p>Driver Name: {{ $ride->driver->user->name }}</p>
                     <p>Departure City: {{ $ride->departure_city_name }}</p>
                     <p>Destination City: {{ $ride->destination_city_name }}</p>
-
+                    <p>Payment Method: {{ $ride->driver->payment_method }}</p>
                     <!-- Add more confirmation details -->
 
                     <form action="{{ route('scheduled-rides.view-receipt', ['ride' => $ride]) }}" method="POST">

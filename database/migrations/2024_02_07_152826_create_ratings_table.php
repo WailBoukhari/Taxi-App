@@ -12,12 +12,14 @@ class CreateRatingsTable extends Migration
     {
         Schema::create('ratings', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('driver_id')->constrained()->onDelete('cascade');
             $table->foreignId('passenger_id')->constrained()->onDelete('cascade');
-            $table->foreignId('driver_id')->constrained('drivers')->onDelete('cascade');
-            $table->integer('rating');
+            $table->unsignedTinyInteger('rating'); // Assuming rating is between 1 and 5
+            $table->text('comment')->nullable();
             $table->timestamps();
         });
     }
+
 
     public function down()
     {

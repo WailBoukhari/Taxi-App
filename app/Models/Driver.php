@@ -25,8 +25,17 @@ class Driver extends Model
     {
         return $this->status === 'active';
     }
-    public function schedules()
+    public function scheduledRides()
     {
         return $this->hasMany(ScheduledRide::class);
+    }
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class);
+    }
+
+    public function averageRating()
+    {
+        return $this->ratings()->avg('rating');
     }
 }

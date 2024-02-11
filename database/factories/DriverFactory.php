@@ -13,10 +13,15 @@ class DriverFactory extends Factory
 
     public function definition()
     {
-        $user = User::factory()->create();
-        $user->assignRole(Role::findByName('driver'));
-
         $faker = \Faker\Factory::create();
+
+        // Create a user with a predefined password
+        $user = User::factory()->create([
+            'password' => bcrypt('driver123'), // Set the password to "driver123"
+        ]);
+
+        // Assign the "driver" role to the user
+        $user->assignRole(Role::findByName('driver'));
 
         // Generate a random vehicle brand
         $vehicleBrand = $faker->randomElement(['Dacia', 'Meridic', 'Pigo']);

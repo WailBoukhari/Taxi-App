@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Driver;
-use Illuminate\Console\Scheduling\Schedule;
+use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -57,10 +57,12 @@ class DriverController extends Controller
     {
         // Get the authenticated user's driver profile
         $driver = Auth::user()->driver;
-
+        // Calculate the average rating for the driver
+        $averageRating = Rating::where('driver_id', $driver->id)->avg('rating');
         // Return the view with driver profile data
-        return view('driver.driver-profile', compact('driver'));
+        return view('driver.driver-profile', compact('driver', 'averageRating'));
     }
+
     // Method to display edit profile form
     public function editProfileForm()
     {
@@ -111,5 +113,8 @@ class DriverController extends Controller
         // Redirect back with success message
         return redirect()->route('driver.driver-profile')->with('success', 'Profile updated successfully.');
     }
-
+    public function showRatingPage(Driver $driver)
+    {
+        return view('driver.rating', compact('driver'));
+    }
 }

@@ -5,20 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
 use App\Models\ScheduledRide;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use PhpParser\Node\Expr\Closure;
 
 class ReservationController extends Controller
 {
-    public function confirmBooking(Request $request, Closure $next,ScheduledRide $ride)
+    public function confirmBooking(Request $request, ScheduledRide $ride)
     {
-        if ($request->user() && !$request->user()->hasRole('passenger')) {
-            abort(403, 'Unauthorized action.');
-        }
         // Ensure the user is authenticated
-        $passenger = auth()->user();
-        // dd($passenger);
+        $passenger = $request->user();
+
         // Check if the passenger exists
         if (!$passenger) {
             abort(404, 'Passenger not found');
@@ -28,14 +23,17 @@ class ReservationController extends Controller
         Reservation::create([
             'scheduled_ride_id' => $ride->id,
             'passenger_id' => $passenger->id,
-            'driver_name' => $ride->driver_name,
+            'driver_name' => $ride->driver->user->name, // Access driver's name via user relationship
             'departure_city' => $ride->departure_city_name,
             'destination_city' => $ride->destination_city_name,
         ]);
+
+        // Decrement the available seats
         $ride->decrement('seats_available');
 
         return view('scheduled-rides.confirm-booking', compact('ride'));
     }
+
     public function index()
     {
         $user = auth()->user();

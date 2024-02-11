@@ -1,3 +1,4 @@
+<!-- driver-profile.blade.php -->
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
@@ -19,6 +20,7 @@
                         <p><strong>Account Status:</strong> {{ $driver->status }}</p>
                         <p><strong>Availability:</strong> {{ $driver->availability }}</p>
                         <p><strong>Payment Method:</strong> {{ $driver->payment_method }}</p>
+                        <p><strong>Average Rating:</strong> {{ number_format($averageRating, 1) }}</p>
                     </div>
 
                     <a href="{{ route('driver.edit-profile') }}" class="btn btn-primary">Edit Profile</a>

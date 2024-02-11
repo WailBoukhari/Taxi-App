@@ -25,8 +25,8 @@ class ScheduledRideFactory extends Factory
             'driver_id' => $driver->id,
             'departure_city_name' => $departureCity,
             'destination_city_name' => $destinationCity,
-            'vehicle_type' => $driver->vehicle_type,
             'seats_available' => $this->faker->numberBetween(1, 6),
+            'price' => $this->faker->randomFloat(2, 10, 1000), // Generate a random price
         ];
     }
 }

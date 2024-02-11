@@ -40,6 +40,15 @@
                         <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                             {{ __('Admin Dashboard') }}
                         </x-nav-link>
+                          <x-nav-link :href="route('admin.passengers')" :active="request()->routeIs('admin.passengers')">
+                            {{ __('Passengers') }}
+                        </x-nav-link>
+                          <x-nav-link :href="route('admin.drivers')" :active="request()->routeIs('admin.drivers')">
+                            {{ __('Driver') }}
+                        </x-nav-link>
+                          <x-nav-link :href="route('admin.scheduled-rides')" :active="request()->routeIs('admin.scheduled-rides')">
+                            {{ __('Schedules') }}
+                        </x-nav-link>
                     @endif
 
                     <!-- Check if the user is a passenger -->

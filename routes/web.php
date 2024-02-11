@@ -5,9 +5,11 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\PassengerController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ScheduledRideController;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -59,18 +61,17 @@ Route::middleware(['auth', 'role:Driver'])->group(function () {
     Route::post('/driver/update-profile', [DriverController::class, 'updateProfile'])
         ->name('driver.update-profile');
     Route::get('driver/driver-schedule', [ScheduledRideController::class, 'indexSchedule'])->name('driver.schedule.index');
+    Route::get('/driver/schedules/create', [ScheduledRideController::class, 'createSchedule'])->name('driver.schedule.create');
+    Route::post('/driver/schedules', [ScheduledRideController::class, 'storeSchedule'])->name('driver.schedule.store');
+    Route::get('/driver/schedule/{schedule}/edit', [ScheduledRideController::class, 'editSchedule'])->name('driver.schedule.edit');
+    Route::put('/driver/schedule/{schedule}', [ScheduledRideController::class, 'updateSchedule'])->name('driver.schedule.update');
+    Route::delete('/driver/schedule/{schedule}', [ScheduledRideController::class, 'destroySchedule'])->name('driver.schedule.destroy');
 
-    Route::get('/schedules/create', [ScheduledRideController::class, 'createSchedule'])->name('driver.schedule.create');
 
-    Route::post('/schedules/store', [ScheduledRideController::class, 'storeSchedule'])->name('driver.schedule.store');
 
-    Route::get('/schedules/edit', [ScheduledRideController::class, 'editSchedule'])->name('driver.schedule.edit');
-
-    Route::post('/schedules/{id}', [ScheduledRideController::class, 'updateSchedule'])->name('driver.schedule.update');
-
-    Route::delete('/schedules/{id}', [ScheduledRideController::class, 'destroySchedule'])->name('driver.schedule.destroy');
-    
 });
+Route::post('/submit-rating', [RatingController::class, 'submitRating'])->name('submit-rating');
+
 Route::post('/scheduled-rides/{ride}/favorite', [ScheduledRideController::class, 'favoriteScheduledRide'])
     ->name('scheduled-rides.favorite');
 Route::get('/search-frequent-route/{departure_city}/{destination_city}', [ScheduledRideController::class, 'searchFrequentRoute'])->name('search-frequent-route');
@@ -80,15 +81,15 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 Route::middleware(['auth'])->group(function () {
     Route::get('/scheduled-ride', [ScheduledRideController::class, 'showSearchResults'])->name('scheduled-ride');
-
-
     Route::get('/scheduled-rides/{ride}/confirm-booking', [ReservationController::class, 'confirmBooking'])
         ->name('scheduled-rides.confirm-booking');
-
     Route::post('/scheduled-rides/{ride}/receipt', [ScheduledRideController::class, 'viewReceipt'])
         ->name('scheduled-rides.view-receipt');
 
 });
+
+Route::get('/driver/{driver}', [DriverController::class, 'showRatingPage'])->name('driver.rating');
+Route::post('/driver/{driver}/rate', [RatingController::class, 'submitRating'])->name('driver.submit-rating');
 
 
 Route::resource('bookings', BookingController::class);
@@ -98,6 +99,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
+Route::middleware(['auth', 'role:Admin'])->group(function () {
+    Route::get('/admin/passengers', [AdminController::class, 'indexPassenger'])->name('admin.passengers');
+    Route::get('/admin/drivers', [AdminController::class, 'indexDriver'])->name('admin.drivers');
+    Route::get('/admin/scheduled-rides', [AdminController::class, 'indexScheduledRide'])->name('admin.scheduled-rides');
+});
 
 require __DIR__ . '/auth.php';

@@ -13,8 +13,15 @@ class PassengerFactory extends Factory
 
     public function definition()
     {
-        $user = User::factory()->create();
-        $user->assignRole('passenger'); 
+        $faker = \Faker\Factory::create();
+
+        // Create a user with a predefined password
+        $user = User::factory()->create([
+            'password' => bcrypt('passenger123'), // Set the password to "passenger123"
+        ]);
+
+        // Assign the "passenger" role to the user
+        $user->assignRole('passenger');
 
         return [
             'user_id' => $user->id,

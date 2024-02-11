@@ -13,8 +13,9 @@ class CreateScheduledRidesTable extends Migration
             $table->foreignId('driver_id')->constrained()->onDelete('cascade');
             $table->string('departure_city_name'); 
             $table->string('destination_city_name');
-            $table->string('vehicle_type')->nullable();
             $table->string('seats_available')->nullable();
+            $table->decimal('price', 8, 2)->nullable();
+
             $table->timestamps();
         });
     }

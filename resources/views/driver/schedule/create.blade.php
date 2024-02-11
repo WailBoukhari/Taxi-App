@@ -10,42 +10,55 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <!-- Schedule creation form -->
-                    <form action="{{ route('driver.schedules.store') }}" method="POST">
+                    <form action="{{ route('driver.schedule.store') }}" method="POST">
                         @csrf
 
-                        <!-- Departure City input -->
+                        <!-- Departure City Name input -->
                         <div class="mt-4">
-                            <x-input-label for="departure_city_name" :value="__('Departure City')" />
-                            <x-text-input id="departure_city_name" class="block mt-1 w-full" type="text" name="departure_city_name" required />
+                            <x-input-label for="departure_city_name" :value="__('Departure City Name')" />
+                            <x-text-input id="departure_city_name" class="block mt-1 w-full" type="text"
+                                name="departure_city_name" :value="old('departure_city_name')" required />
                             <x-input-error :messages="$errors->get('departure_city_name')" class="mt-2" />
                         </div>
 
-                        <!-- Destination City input -->
+                        <!-- Destination City Name input -->
                         <div class="mt-4">
-                            <x-input-label for="destination_city_name" :value="__('Destination City')" />
-                            <x-text-input id="destination_city_name" class="block mt-1 w-full" type="text" name="destination_city_name" required />
+                            <x-input-label for="destination_city_name" :value="__('Destination City Name')" />
+                            <x-text-input id="destination_city_name" class="block mt-1 w-full" type="text"
+                                name="destination_city_name" :value="old('destination_city_name')" required />
                             <x-input-error :messages="$errors->get('destination_city_name')" class="mt-2" />
                         </div>
+                        <!-- Price input -->
 
-                        <!-- Vehicle Type input -->
                         <div class="mt-4">
-                            <x-input-label for="vehicle_type" :value="__('Vehicle Type')" />
-                            <x-text-input id="vehicle_type" class="block mt-1 w-full" type="text" name="vehicle_type" />
-                            <x-input-error :messages="$errors->get('vehicle_type')" class="mt-2" />
+                            <x-input-label for="price" :value="__('Price')" />
+                            <x-text-input id="price" class="block mt-1 w-full" type="number" step="0.01"
+                                name="price" :value="old('price')" />
+                            <x-input-error :messages="$errors->get('price')" class="mt-2" />
                         </div>
-
-                        <!-- Seats Available input -->
                         <div class="mt-4">
                             <x-input-label for="seats_available" :value="__('Seats Available')" />
-                            <x-number-input id="seats_available" class="block mt-1 w-full" type="number" name="seats_available" />
+                            <select id="seats_available" name="seats_available"
+                                class="block mt-1 w-full rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border-gray-300">
+                                <option value="2" @if (old('seats_available') == 1) selected @endif>1</option>
+                                <option value="2" @if (old('seats_available') == 2) selected @endif>2</option>
+
+                                <option value="2" @if (old('seats_available') == 3) selected @endif>3</option>
+
+                                <option value="2" @if (old('seats_available') == 4) selected @endif>4</option>
+
+                                <option value="4" @if (old('seats_available') == 5) selected @endif>5</option>
+                                <option value="6" @if (old('seats_available') == 6) selected @endif>6</option>
+                            </select>
                             <x-input-error :messages="$errors->get('seats_available')" class="mt-2" />
                         </div>
 
                         <!-- Submit button -->
                         <div class="mt-4">
-                            <x-button>
+                            <button type="submit"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                 {{ __('Create Schedule') }}
-                            </x-button>
+                            </button>
                         </div>
                     </form>
                 </div>

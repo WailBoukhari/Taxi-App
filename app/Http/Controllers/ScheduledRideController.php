@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Driver;
 use App\Models\ScheduledRide;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Http\Request;
@@ -46,11 +47,15 @@ class ScheduledRideController extends Controller
     {
         $query = ScheduledRide::query();
 
-        if ($departureCity) {
+        if ($departureCity && $destinationCity) {
+            // Search for scheduled rides with both departure and destination cities
+            $query->where('departure_city_name', $departureCity)
+                ->where('destination_city_name', $destinationCity);
+        } elseif ($departureCity) {
+            // Search for scheduled rides with only departure city
             $query->where('departure_city_name', $departureCity);
-        }
-
-        if ($destinationCity) {
+        } elseif ($destinationCity) {
+            // Search for scheduled rides with only destination city
             $query->where('destination_city_name', $destinationCity);
         }
 
@@ -77,76 +82,73 @@ class ScheduledRideController extends Controller
     }
     public function indexSchedule()
     {
-        $schedules = Auth::user()->driver->schedules;
+        $schedules = Auth::user()->driver->scheduledRides()->withCount('reservations')->get();
         // Pass the schedules to the view
         return view('driver.schedule.index', compact('schedules'));
     }
+
     public function createSchedule(Request $request)
     {
-        // Validate the incoming request data
-        $request->validate([
-            'date' => 'required|date',
-            'time' => 'required',
-            // Add validation rules for other schedule details
+        return view('driver.schedule.create');
+
+    }
+
+    public function storeSchedule(Request $request)
+    {
+        // Validate the request data
+        $validatedData = $request->validate([
+            'departure_city_name' => 'required|string|max:255',
+            'destination_city_name' => 'required|string|max:255',
+            'seats_available' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
         ]);
+        // Get the authenticated user
+        $user = Auth::user();
 
-        // Create a new schedule instance
-        $schedule = new Schedule();
-        $schedule->date = $request->date;
-        $schedule->time = $request->time;
-        // Assign other schedule details from the request
-
-        // Save the schedule to the database
-        $schedule->save();
+        $driver = $user->driver ?: new Driver();
+        $driver->save();
+        // Create the scheduled ride
+        $scheduledRide = new ScheduledRide([
+            'departure_city_name' => $validatedData['departure_city_name'],
+            'destination_city_name' => $validatedData['destination_city_name'],
+            'seats_available' => $validatedData['seats_available'],
+            'price' => $validatedData['price'],
+        ]);
+        // Associate the scheduled ride with the driver and save it
+        $driver->scheduledRides()->save($scheduledRide);
 
         // Redirect back with success message
-        return redirect()->route('schedules.index')->with('success', 'Schedule created successfully.');
+        return redirect()->route('driver.schedule.index')->with('success', 'Schedule created successfully.');
     }
-    public function editSchedule($id)
+
+    public function editSchedule(ScheduledRide $schedule)
     {
-        // Find the schedule by ID
-        $schedule = Schedule::findOrFail($id);
-
-        // Check if the schedule belongs to the authenticated driver
-        if ($schedule->driver_id !== Auth::user()->driver->id) {
-            // If not authorized, redirect back with error message
-            return redirect()->route('driver.schedules.index')->with('error', 'Unauthorized access.');
-        }
-
-        // Pass the schedule to the view
         return view('driver.schedule.edit', compact('schedule'));
     }
-    public function updateSchedule(Request $request, $id)
+
+
+    public function updateSchedule(Request $request, ScheduledRide $schedule)
     {
-        // Find the schedule by ID
-        $schedule = Schedule::findOrFail($id);
-
-        // Validate the request data
-        $request->validate([
-            'date' => 'required|date',
-            'time' => 'required|date_format:H:i',
-            // Add validation rules for other fields
+        $validatedData = $request->validate([
+            'departure_city_name' => 'required|string|max:255',
+            'destination_city_name' => 'required|string|max:255',
+            'seats_available' => 'nullable|integer|min:1',
+            'price' => 'nullable|numeric|min:0',
         ]);
 
-        // Update the schedule
-        $schedule->update([
-            'date' => $request->date,
-            'time' => $request->time,
-            // Update other fields accordingly
-        ]);
+        $schedule->update($validatedData);
 
-        // Redirect back with success message
-        return redirect()->route('driver.dashboard')->with('success', 'Schedule updated successfully.');
+        return redirect()->route('driver.schedule.index')->with('success', 'Schedule updated successfully.');
     }
-    public function deleteSchedule($id)
+    public function destroySchedule(ScheduledRide $schedule)
     {
-        // Find the schedule by ID
-        $schedule = Schedule::findOrFail($id);
-
-        // Delete the schedule
         $schedule->delete();
 
-        // Redirect back with success message
-        return redirect()->route('driver.dashboard')->with('success', 'Schedule deleted successfully.');
+
+        return redirect()->route('driver.schedule.index')->with('success', 'Schedule deleted successfully.');
     }
+
+
+
+
 }
