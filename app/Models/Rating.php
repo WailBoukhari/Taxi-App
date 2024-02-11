@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Driver;
 use App\Models\Passenger;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

@@ -8,20 +8,31 @@
     </x-slot>
 
     <div class="py-12 bg-gray-900">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-gray-800 border-b border-gray-700 text-white">
-                    <h3 class="text-lg font-semibold">Ride Information</h3>
-                    <p>Driver Name: {{ $ride->driver_name }}</p>
-                    <p>Departure City: {{ $ride->departure_city_name }}</p>
-                    <p>Destination City: {{ $ride->destination_city_name }}</p>
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <div class="p-6 sm:p-8 text-white">
+                    <h3 class="text-lg font-semibold mb-6">Ride Information</h3>
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-400">Driver Name:</p>
+                        <p class="font-semibold">{{ $ride->driver_name }}</p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-400">Departure City:</p>
+                        <p class="font-semibold">{{ $ride->departure_city_name }}</p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-400">Destination City:</p>
+                        <p class="font-semibold">{{ $ride->destination_city_name }}</p>
+                    </div>
                     <!-- Add more ride details here -->
 
-                    <hr class="my-4 border-gray-700">
+                    <hr class="my-8 border-gray-700">
 
-                    <h3 class="text-lg font-semibold">Barcode</h3>
+                    <h3 class="text-lg font-semibold mb-6">Barcode</h3>
                     <!-- Display the barcode image -->
-                    {{ $barcode }}
+                    <div class="flex justify-center">
+                        {{ $barcode }}
+                    </div>
 
                     <!-- Additional receipt details -->
 

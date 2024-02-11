@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Driver;
+use App\Models\Rating;
 use App\Models\ScheduledRide;
-use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -12,18 +12,55 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ScheduledRideController extends Controller
 {
+
     public function showSearchResults(Request $request)
     {
-        $departureCity = $request->input('departing_city');
-        $destinationCity = $request->input('arriving_city');
+        // Retrieve filtering parameters from the request
+        $departureCity = $request->input('departurePlace');
+        $destinationCity = $request->input('arrivalPlace');
+        $price = $request->input('price');
+        $seats = $request->input('seats');
+        $rating = $request->input('rating');
 
-        $scheduledRides = $this->searchScheduledRides($departureCity, $destinationCity);
+        // Fetch departure and arrival places for the dropdown
+        $departurePlaces = ScheduledRide::pluck('departure_city_name')->unique();
+        $arrivalPlaces = ScheduledRide::pluck('destination_city_name')->unique();
 
-        return view('scheduled-ride', compact('scheduledRides'));
+        // Start with all scheduled rides
+        $filteredRides = ScheduledRide::query();
+
+        // Apply filters if provided
+        if ($departureCity) {
+            $filteredRides->where('departure_city_name', $departureCity);
+        }
+
+        if ($destinationCity) {
+            $filteredRides->where('destination_city_name', $destinationCity);
+        }
+
+        if ($price) {
+            $filteredRides->where('price', '<=', $price);
+        }
+
+        if ($seats) {
+            $filteredRides->where('seats_available', '>=', $seats);
+        }
+
+        if ($rating) {
+            // Filter rides by driver rating
+            $filteredRides->whereHas('driver', function ($query) use ($rating) {
+                $query->whereHas('ratings', function ($subquery) use ($rating) {
+                    $subquery->where('rating', '>=', $rating);
+                });
+            });
+        }
+
+        // Get the filtered rides
+        $filteredRides = $filteredRides->get();
+
+        // Return the view with the filtered rides and departure places
+        return view('scheduled-ride', compact('filteredRides', 'departurePlaces', 'arrivalPlaces'));
     }
-
-
-
     public function viewReceipt(Request $request)
     {
         $rideId = $request->input('ride_id');

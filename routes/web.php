@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\PassengerController;
 use App\Http\Controllers\ProfileController;
@@ -70,11 +69,15 @@ Route::middleware(['auth', 'role:Driver'])->group(function () {
 
 
 });
+
 Route::post('/submit-rating', [RatingController::class, 'submitRating'])->name('submit-rating');
 
 Route::post('/scheduled-rides/{ride}/favorite', [ScheduledRideController::class, 'favoriteScheduledRide'])
     ->name('scheduled-rides.favorite');
 Route::get('/search-frequent-route/{departure_city}/{destination_city}', [ScheduledRideController::class, 'searchFrequentRoute'])->name('search-frequent-route');
+
+
+Route::post('/scheduled-rides/filter', [ScheduledRideController::class, 'filter'])->name('scheduled-rides.filter');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -92,7 +95,7 @@ Route::get('/driver/{driver}', [DriverController::class, 'showRatingPage'])->nam
 Route::post('/driver/{driver}/rate', [RatingController::class, 'submitRating'])->name('driver.submit-rating');
 
 
-Route::resource('bookings', BookingController::class);
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

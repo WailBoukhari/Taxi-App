@@ -24,13 +24,12 @@ class RatingController extends Controller
         $user = auth()->user();
 
         // Retrieve the associated passenger
-        $passenger = Passenger::where('user_id', $user->id)->first();
                 // Set the passenger_id
         
         // Create a new rating record
         $rating = new Rating();
         $rating->driver_id = $driver->id;
-        $rating->passenger_id = $passenger->id;
+        $rating->passenger_id = auth()->user()->id;
         $rating->rating = $validatedData['rating'];
         $rating->comment = $validatedData['comment'];
         $rating->save();
