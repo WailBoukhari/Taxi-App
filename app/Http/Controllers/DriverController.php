@@ -32,26 +32,33 @@ class DriverController extends Controller
             'vehicle_brand' => 'required|string|max:255',
         ]);
 
+      
+
         $user = Auth::user();
 
+        $imageName = null;
+
+        if ($request->hasFile('profile_picture')) {
+            $image = $request->file('profile_picture');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('profile_pictures'), $imageName);
+        }
         $driver = $user->driver ?: new Driver();
 
         $driver->description = $request->description;
         $driver->license_plate = $request->license_plate;
         $driver->license_number = $request->license_number;
         $driver->vehicle_brand = $request->vehicle_brand;
+        $driver->profile_picture = 'profile_pictures/' . $imageName;
         $driver->status = "active";
 
-        // Save the profile picture if provided
-        if ($request->hasFile('profile_picture')) {
-            $driver->profile_picture = $request->file('profile_picture')->store('profile_images', 'public');
-        }
-
-        // Associate the driver record with the user and save it
         $user->driver()->save($driver);
 
         return redirect()->route('driver.dashboard')->with('success', 'Your account has been successfully updated.');
     }
+
+
+
 
 
     public function driverProfile()
@@ -63,7 +70,6 @@ class DriverController extends Controller
         // Return the view with driver profile data
         return view('driver.driver-profile', compact('driver', 'averageRating'));
     }
-
     // Method to display edit profile form
     public function editProfileForm()
     {
@@ -97,17 +103,22 @@ class DriverController extends Controller
             $driver->user_id = auth()->id();
         }
 
-        // Update or create driver profile data
+        $imageName = null;
+
         if ($request->hasFile('profile_picture')) {
-            $profilePicturePath = $request->file('profile_picture')->store('profile_pictures'); // Store the profile picture
-            $driver->profile_picture = $profilePicturePath;
+            $image = $request->file('profile_picture');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('profile_pictures'), $imageName);
         }
+
         $driver->description = $request->description;
         $driver->license_plate = $request->license_plate;
         $driver->vehicle_brand = $request->vehicle_brand;
         $driver->license_number = $request->license_number;
         $driver->status = $request->status;
         $driver->availability = $request->availability;
+        $driver->profile_picture = 'profile_pictures/' . $imageName;
+
         $driver->payment_method = $request->payment_method;
         $driver->save();
 

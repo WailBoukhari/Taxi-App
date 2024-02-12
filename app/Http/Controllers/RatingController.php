@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 
 use App\Models\Driver;
-use App\Models\Passenger;
 use App\Models\Rating;
 use Illuminate\Http\Request;
 

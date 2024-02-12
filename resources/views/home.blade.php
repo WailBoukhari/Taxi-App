@@ -6,13 +6,12 @@
 
                 <div class="px-6 py-4 bg-gray-800">
                     <form action="{{ route('scheduled-ride') }}" method="GET">
-
                         <div class="mb-4">
                             <livewire:city-search />
                         </div>
 
                         <button type="submit"
-                            class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search</button>
+                            class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">Search</button>
                     </form>
                 </div>
             </div>

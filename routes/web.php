@@ -111,5 +111,11 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/admin/drivers', [AdminController::class, 'indexDriver'])->name('admin.drivers');
     Route::get('/admin/scheduled-rides', [AdminController::class, 'indexScheduledRide'])->name('admin.scheduled-rides');
 });
+Route::post('/receipt/download', function () {
+    $html = view('scheduled-rides.receipt')->render();
 
+    $pdf = Browsershot::html($html)->pdf();
+
+    return $pdf->download('receipt.pdf');
+})->name('receipt.download');
 require __DIR__ . '/auth.php';

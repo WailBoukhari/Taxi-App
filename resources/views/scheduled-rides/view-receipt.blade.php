@@ -1,5 +1,3 @@
-<!-- resources/views/scheduled-rides/receipt.blade.php -->
-
 <x-guest-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-white leading-tight">
@@ -14,7 +12,7 @@
                     <h3 class="text-lg font-semibold mb-6">Ride Information</h3>
                     <div class="mb-4">
                         <p class="text-sm text-gray-400">Driver Name:</p>
-                        <p class="font-semibold">{{ $ride->driver_name }}</p>
+                        <p class="font-semibold">{{ $ride->driver->user->name }}</p>
                     </div>
                     <div class="mb-4">
                         <p class="text-sm text-gray-400">Departure City:</p>
@@ -30,12 +28,15 @@
 
                     <h3 class="text-lg font-semibold mb-6">Barcode</h3>
                     <!-- Display the barcode image -->
-                    <div class="flex justify-center">
+                    <div class="flex justify-center mb-8">
                         {{ $barcode }}
                     </div>
 
-                    <!-- Additional receipt details -->
-
+                    <!-- Download PDF button -->
+                    <form action="{{ route('receipt.download') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">Download PDF</button>
+                    </form>
                 </div>
             </div>
         </div>

@@ -5,37 +5,46 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="py-5">
-                @if (session('success'))
-                    <div id="success-message"
-                        class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
-                        <span class="block sm:inline">{{ session('success') }}</span>
-                    </div>
-                @endif
-            </div>
+    <div class="py-8">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            @if (session('success'))
+                <div id="success-message"
+                    class="bg-green-500 text-white px-4 py-3 mb-4 rounded-md shadow-md">
+                    <span>{{ session('success') }}</span>
+                </div>
+            @endif
 
-            @foreach ($reservations as $reservation)
-                <div class="bg-gray-800 shadow-sm p-4 mb-4 rounded-md">
-                    <p class="text-lg font-semibold text-white">Driver Name: {{ $reservation->driver_name }}</p>
-                    <p class="text-gray-400">Departure City: {{ $reservation->departure_city }}</p>
-                    <p class="text-gray-400">Destination City: {{ $reservation->destination_city }}</p>
-                    <p class="text-gray-400">Created At: {{ $reservation->created_at->diffForHumans() }}</p>
+            @forelse ($reservations as $reservation)
+                <div class="bg-gray-800 shadow-md rounded-md mb-6 p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <p class="text-lg font-semibold text-white">Driver Name: {{ $reservation->driver->user->name }}</p>
+                            <p class="text-gray-400">Departure City: {{ $reservation->departure_city }}</p>
+                            <p class="text-gray-400">Destination City: {{ $reservation->destination_city }}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400">Created At: {{ $reservation->created_at->diffForHumans() }}</p>
+                        </div>
+                    </div>
                     <form action="{{ route('reservations.cancel', $reservation) }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        @if ($reservation->created_at->addHours(24)->isPast())
-                            <button class="bg-gray-600 text-gray-400 py-1 px-4 rounded-md cursor-not-allowed"
-                                disabled>Cancel </button>
-                        @else
-                            <button type="submit"
-                                class="bg-red-500 hover:bg-red-600 text-white py-1 px-4 rounded-md">Cancel</button>
-                        @endif
+                        <div class="flex justify-end">
+                            @if ($reservation->created_at->addHours(0.1)->isPast())
+                                <a href="{{ route('driver.rating', ['driver' => $reservation->driver->id]) }}"
+                                    class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2">Rate Driver</a>
+                                <button class="bg-gray-600 text-gray-400 py-2 px-4 rounded-md cursor-not-allowed"
+                                    disabled>Cancel</button>
+                            @else
+                                <button type="submit"
+                                    class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md">Cancel</button>
+                            @endif
+                        </div>
                     </form>
-
                 </div>
-            @endforeach
+            @empty
+                <p class="text-gray-400 text-center">No reservations found.</p>
+            @endforelse
         </div>
     </div>
 </x-app-layout>
