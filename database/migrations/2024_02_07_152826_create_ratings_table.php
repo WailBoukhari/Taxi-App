@@ -13,8 +13,8 @@ class CreateRatingsTable extends Migration
         Schema::create('ratings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('driver_id')->constrained()->onDelete('cascade');
-            $table->foreignId('passenger_id')->constrained()->onDelete('cascade');
-            $table->unsignedTinyInteger('rating'); // Assuming rating is between 1 and 5
+            $table->foreignId('passenger_id')->constrained('users')->onDelete('cascade');
+            $table->unsignedTinyInteger('rating');
             $table->text('comment')->nullable();
             $table->timestamps();
         });

@@ -4,17 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ScheduledRide extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $fillable = [
         'driver_id',
         'departure_city_name',
         'destination_city_name',
         'seats_available',
         'price',];
-
+    protected $dates = ['deleted_at'];
     public function scheduledRides()
     {
         return $this->hasMany(ScheduledRide::class);

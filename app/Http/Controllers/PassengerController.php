@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\FrequentRoute;
+use App\Models\Passenger;
 use App\Models\Reservation;
 use App\Models\ScheduledRide;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,32 +18,21 @@ class PassengerController extends Controller
     {
         return view("passenger.dashboard");
     }
-
     public function frequentRoutes()
     {
-        // Get all reservations and group them by departure and destination cities
-        $reservations = Reservation::select('departure_city', 'destination_city', 'driver_name', 'created_at')
-            ->groupBy('departure_city', 'destination_city', 'driver_name', 'created_at')
+        // Retrieve frequent routes data with latest created_at timestamp
+        $reservations = Reservation::select('departure_city', 'destination_city')
+            ->selectRaw('COUNT(*) as count')
+            ->groupBy('departure_city', 'destination_city')
             ->get();
 
-        // Count the number of times each route has been booked
-        $frequentRoutes = $reservations->groupBy(function ($item) {
-            return $item->departure_city . '-' . $item->destination_city;
-        })->map(function ($group) {
-            return [
-                'departure_city' => $group->first()->departure_city,
-                'destination_city' => $group->first()->destination_city,
-                'driver_name' => $group->first()->driver_name ?? 'Unknown',
-                'created_at' => $group->first()->created_at,
-                'count' => $group->count(),
-            ];
-        });
-
         // Sort the frequent routes by count in descending order
-        $sortedFrequentRoutes = $frequentRoutes->sortByDesc('count');
+        $sortedFrequentRoutes = $reservations->sortByDesc('count');
 
+        // Pass data to the view
         return view('passenger.frequent-routes', compact('sortedFrequentRoutes'));
     }
+
     public function searchSavedRoute(FrequentRoute $route)
     {
         // Retrieve the details of the saved route
@@ -54,5 +45,22 @@ class PassengerController extends Controller
         // Pass the search results to the view
         return view('scheduled-ride', compact('scheduledRides'));
     }
- 
+    public function disable(Request $request, $id)
+    {
+        $passenger = Passenger::findOrFail($id);
+        $passenger->delete();
+
+        // Redirect back or to any other route as needed
+        return redirect()->back()->with('success', 'Passenger disabled successfully.');
+    }
+
+    public function enable(Request $request, $id)
+    {
+        $passenger = Passenger::withTrashed()->findOrFail($id);
+        $passenger->restore();
+
+        // Redirect back or to any other route as needed
+        return redirect()->back()->with('success', 'Passenger enabled successfully.');
+    }
+  
 }

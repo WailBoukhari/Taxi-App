@@ -16,8 +16,8 @@ class ScheduledRideController extends Controller
     public function showSearchResults(Request $request)
     {
         // Retrieve filtering parameters from the request
-        $departureCity = $request->input('departurePlace');
-        $destinationCity = $request->input('arrivalPlace');
+        $departureCity = $request->input('departing_city');
+        $destinationCity = $request->input('arriving_city');
         $price = $request->input('price');
         $seats = $request->input('seats');
         $rating = $request->input('rating');
@@ -117,12 +117,17 @@ class ScheduledRideController extends Controller
         // Pass the search results to the view
         return view('scheduled-ride', compact('scheduledRides'));
     }
+
     public function indexSchedule()
     {
-        $schedules = Auth::user()->driver->scheduledRides()->withCount('reservations')->get();
-        // Pass the schedules to the view
+        $driver = Auth::user()->driver;
+
+        // Get both active and trashed schedules
+        $schedules = $driver->scheduledRides()->withCount('reservations')->withTrashed()->get();
+
         return view('driver.schedule.index', compact('schedules'));
     }
+
 
     public function createSchedule(Request $request)
     {
@@ -185,7 +190,23 @@ class ScheduledRideController extends Controller
         return redirect()->route('driver.schedule.index')->with('success', 'Schedule deleted successfully.');
     }
 
+    public function disable(Request $request, $id)
+    {
+        $scheduledRide = ScheduledRide::findOrFail($id);
+        $scheduledRide->delete();
 
+        // Redirect back or to any other route as needed
+        return redirect()->back()->with('success', 'Scheduled ride disabled successfully.');
+    }
+
+    public function enable(Request $request, $id)
+    {
+        $scheduledRide = ScheduledRide::withTrashed()->findOrFail($id);
+        $scheduledRide->restore();
+
+        // Redirect back or to any other route as needed
+        return redirect()->back()->with('success', 'Scheduled ride enabled successfully.');
+    }
 
 
 }

@@ -30,4 +30,8 @@ class Reservation extends Model
     {
         return $this->belongsTo(ScheduledRide::class, 'scheduled_ride_id');
     }
+    public function driver()
+    {
+        return $this->belongsTo(Driver::class);
+    }
 }

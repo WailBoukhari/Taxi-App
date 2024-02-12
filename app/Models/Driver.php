@@ -2,20 +2,24 @@
 
 namespace App\Models;
 
+use App\Models\Rating;
 use App\Models\ScheduledRide;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Driver extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
         'license_number',
         'status'
     ];
+
+    protected $dates = ['deleted_at'];
 
     public function user()
     {

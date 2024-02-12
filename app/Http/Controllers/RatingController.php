@@ -21,12 +21,11 @@ class RatingController extends Controller
             'comment' => 'nullable|string|max:255',
         ]);
         // Retrieve the authenticated user
-        $user = auth()->user();
-
+        // $user = auth()->user();
         // Create a new rating record
         $rating = new Rating();
         $rating->driver_id = $driver->id;
-        $rating->passenger_id = $user->id;
+        $rating->passenger_id = auth()->user()->id;
         $rating->rating = $validatedData['rating'];
         $rating->comment = $validatedData['comment'];
         $rating->save();

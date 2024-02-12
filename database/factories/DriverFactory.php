@@ -37,7 +37,7 @@ class DriverFactory extends Factory
             'description' => $faker->paragraph,
             'license_plate' => $licensePlate,
             'status' => 'active', // Default status to active
-            'availability' => $faker->randomElement(['available', 'unavailable']),
+            'availability' => $faker->randomElement(['available', 'on_trip', 'offline']),
             'payment_method' => $faker->randomElement(['cash', 'card', 'other']),
         ];
     }

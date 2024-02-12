@@ -19,10 +19,12 @@ return new class extends Migration
             $table->string('license_plate')->nullable();
             $table->string('vehicle_brand')->nullable();
             $table->enum('status', ['inactive', 'active'])->default('inactive');
-            $table->enum('availability', ['available', 'unavailable'])->default('unavailable');
+            $table->enum('availability', ['available', 'on_trip', 'offline' ])->default('offline');
             $table->enum('payment_method', ['cash', 'card', 'other'])->default('cash');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

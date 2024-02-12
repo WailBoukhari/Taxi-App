@@ -15,7 +15,7 @@ class CreateScheduledRidesTable extends Migration
             $table->string('destination_city_name');
             $table->string('seats_available')->nullable();
             $table->decimal('price', 8, 2)->nullable();
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

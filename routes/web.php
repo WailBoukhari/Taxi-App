@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('home');
-});
+})->name('home');
 Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 });
@@ -79,9 +79,6 @@ Route::get('/search-frequent-route/{departure_city}/{destination_city}', [Schedu
 
 Route::post('/scheduled-rides/filter', [ScheduledRideController::class, 'filter'])->name('scheduled-rides.filter');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 Route::middleware(['auth'])->group(function () {
     Route::get('/scheduled-ride', [ScheduledRideController::class, 'showSearchResults'])->name('scheduled-ride');
     Route::get('/scheduled-rides/{ride}/confirm-booking', [ReservationController::class, 'confirmBooking'])
@@ -95,7 +92,14 @@ Route::get('/driver/{driver}', [DriverController::class, 'showRatingPage'])->nam
 Route::post('/driver/{driver}/rate', [RatingController::class, 'submitRating'])->name('driver.submit-rating');
 
 
+Route::delete('/passengers/{passenger}/disable', [PassengerController::class, 'disable'])->name('passengers.disable');
+Route::put('/passengers/{passenger}/enable', [PassengerController::class, 'enable'])->name('passengers.enable');
 
+Route::delete('/drivers/{driver}/disable', [DriverController::class, 'disable'])->name('drivers.disable');
+Route::put('/drivers/{driver}/enable', [DriverController::class, 'enable'])->name('drivers.enable');
+
+Route::delete('/scheduled-rides/{scheduledRide}/disable', [ScheduledRideController::class, 'disable'])->name('scheduled-rides.disable');
+Route::put('/scheduled-rides/{scheduledRide}/enable', [ScheduledRideController::class, 'enable'])->name('scheduled-rides.enable');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

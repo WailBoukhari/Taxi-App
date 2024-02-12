@@ -19,20 +19,30 @@ class ReservationController extends Controller
             abort(404, 'Passenger not found');
         }
 
+        // Get the driver ID from the scheduled ride
+        $driverId = $ride->driver_id;
+
+        // Check if the driver ID is available
+        if (!$driverId) {
+            abort(404, 'Driver not found');
+        }
+
         // Create a new reservation record
-        Reservation::create([
-            'scheduled_ride_id' => $ride->id,
-            'passenger_id' => $passenger->id,
-            'driver_name' => $ride->driver->user->name, // Access driver's name via user relationship
-            'departure_city' => $ride->departure_city_name,
-            'destination_city' => $ride->destination_city_name,
-        ]);
+        $reservation = new Reservation();
+        $reservation->scheduled_ride_id = $ride->id;
+        $reservation->passenger_id = $passenger->id;
+        $reservation->driver_id = $driverId;
+        $reservation->departure_city = $ride->departure_city_name;
+        $reservation->destination_city = $ride->destination_city_name;
+        $reservation->save();
 
         // Decrement the available seats
         $ride->decrement('seats_available');
 
         return view('scheduled-rides.confirm-booking', compact('ride'));
     }
+
+
 
     public function index()
     {

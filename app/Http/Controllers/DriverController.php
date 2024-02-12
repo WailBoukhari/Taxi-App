@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Driver;
 use App\Models\Rating;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -116,5 +117,19 @@ class DriverController extends Controller
     public function showRatingPage(Driver $driver)
     {
         return view('driver.rating', compact('driver'));
+    }
+
+    public function enable($id)
+    {
+        $driver = Driver::withTrashed()->findOrFail($id);
+        $driver->restore();
+        return redirect()->back()->with('success', 'Driver enabled successfully');
+    }
+
+    public function disable($id)
+    {
+        $driver = Driver::findOrFail($id);
+        $driver->delete();
+        return redirect()->back()->with('success', 'Driver disabled successfully');
     }
 }
