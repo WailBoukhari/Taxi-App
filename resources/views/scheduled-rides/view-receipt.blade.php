@@ -30,13 +30,7 @@
                     <!-- Display the barcode image -->
                     <div class="flex justify-center mb-8">
                         {{ $barcode }}
-                    </div>
-
-                    <!-- Download PDF button -->
-                    <form action="{{ route('receipt.download') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">Download PDF</button>
-                    </form>
+                    </div>  
                 </div>
             </div>
         </div>

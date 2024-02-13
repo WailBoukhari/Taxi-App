@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -92,7 +94,7 @@ Route::get('/driver/{driver}', [DriverController::class, 'showRatingPage'])->nam
 Route::post('/driver/{driver}/rate', [RatingController::class, 'submitRating'])->name('driver.submit-rating');
 
 
-Route::delete('/passengers/{passenger}/disable', [PassengerController::class, 'disable'])->name('passengers.disable');
+Route::delete('/passengers/{passenger}/isable', [PassengerController::class, 'disable'])->name('passengers.disable');
 Route::put('/passengers/{passenger}/enable', [PassengerController::class, 'enable'])->name('passengers.enable');
 
 Route::delete('/drivers/{driver}/disable', [DriverController::class, 'disable'])->name('drivers.disable');
@@ -111,11 +113,6 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/admin/drivers', [AdminController::class, 'indexDriver'])->name('admin.drivers');
     Route::get('/admin/scheduled-rides', [AdminController::class, 'indexScheduledRide'])->name('admin.scheduled-rides');
 });
-Route::post('/receipt/download', function () {
-    $html = view('scheduled-rides.receipt')->render();
 
-    $pdf = Browsershot::html($html)->pdf();
 
-    return $pdf->download('receipt.pdf');
-})->name('receipt.download');
 require __DIR__ . '/auth.php';

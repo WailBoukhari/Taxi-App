@@ -25,7 +25,7 @@
                         </thead>
                         <tbody class="bg-gray-900 divide-y divide-gray-600">
                             @foreach ($passengers as $passenger)
-                            <tr class="{{ $passenger->trashed() ? 'text-gray-500' : '' }}">
+                            <tr class="{{ $passenger->trashed() ? 'opacity-50' : '' }}">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     {{ $passenger->user->name }}
                                 </td>
