@@ -17,15 +17,16 @@
                     @foreach ($sortedFrequentRoutes as $route)
                         <div class="bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                             <div class="p-6 border-b border-gray-700 text-white">
-                                <p>{{ $route->departure_city }} to {{ $route->destination_city }} (Booked
+                                <p>{{ $route->departure_city_name }} to {{ $route->destination_city_name }} (Booked
                                     {{ $route->count }} times)</p>
                             </div>
-                            <a href="{{ route('scheduled-ride', ['departing_city' => $route->departure_city, 'arriving_city' => $route->destination_city]) }}"
+                            <a href="{{ route('scheduled-ride', ['departing_city' => $route->departure_city_name, 'arriving_city' => $route->destination_city_name]) }}"
                                 class="block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4 text-center">
                                 Search Frequent Route
                             </a>
                         </div>
                     @endforeach
+
                 </div>
             @endif
         </div>

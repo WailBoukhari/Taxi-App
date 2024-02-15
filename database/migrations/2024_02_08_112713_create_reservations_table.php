@@ -15,9 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('scheduled_ride_id')->constrained()->onDelete('cascade');
             $table->foreignId('passenger_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('driver_id')->constrained('drivers')->onDelete('cascade'); // Change 'users' to 'drivers'
-            $table->string('departure_city');
-            $table->string('destination_city');
+            $table->foreignId('driver_id')->constrained('drivers')->onDelete('cascade');
             $table->timestamps();
         });
     }

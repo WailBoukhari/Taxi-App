@@ -32,8 +32,6 @@ class ReservationController extends Controller
         $reservation->scheduled_ride_id = $ride->id;
         $reservation->passenger_id = $passenger->id;
         $reservation->driver_id = $driverId;
-        $reservation->departure_city = $ride->departure_city_name;
-        $reservation->destination_city = $ride->destination_city_name;
         $reservation->save();
 
         // Decrement the available seats

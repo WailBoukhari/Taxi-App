@@ -6,10 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\FrequentRoute;
 use App\Models\Passenger;
 use App\Models\Reservation;
-use App\Models\ScheduledRide;
-use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 
 class PassengerController extends Controller
@@ -21,10 +18,12 @@ class PassengerController extends Controller
     public function frequentRoutes()
     {
         // Retrieve frequent routes data with latest created_at timestamp
-        $reservations = Reservation::select('departure_city', 'destination_city')
+        $reservations = Reservation::join('scheduled_rides', 'reservations.scheduled_ride_id', '=', 'scheduled_rides.id')
+            ->select('scheduled_rides.departure_city_name', 'scheduled_rides.destination_city_name')
             ->selectRaw('COUNT(*) as count')
-            ->groupBy('departure_city', 'destination_city')
+            ->groupBy('scheduled_rides.departure_city_name', 'scheduled_rides.destination_city_name')
             ->get();
+
 
         // Sort the frequent routes by count in descending order
         $sortedFrequentRoutes = $reservations->sortByDesc('count');

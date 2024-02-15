@@ -58,7 +58,6 @@
                                         {{ $schedule->seats_available }} / 6
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-gray-300 dark:text-gray-100">
-                                        <!-- Calculate and display the ratio of seats filled to seats available -->
                                         {{ $schedule->reservations->count() }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
