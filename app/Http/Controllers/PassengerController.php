@@ -17,13 +17,14 @@ class PassengerController extends Controller
     }
     public function frequentRoutes()
     {
-        // Retrieve frequent routes data with latest created_at timestamp
+        // Retrieve frequent routes data associated with the logged-in user
+        $userId = auth()->id(); // Get the ID of the logged-in user
         $reservations = Reservation::join('scheduled_rides', 'reservations.scheduled_ride_id', '=', 'scheduled_rides.id')
+            ->where('reservations.passenger_id', $userId)
             ->select('scheduled_rides.departure_city_name', 'scheduled_rides.destination_city_name')
             ->selectRaw('COUNT(*) as count')
             ->groupBy('scheduled_rides.departure_city_name', 'scheduled_rides.destination_city_name')
             ->get();
-
 
         // Sort the frequent routes by count in descending order
         $sortedFrequentRoutes = $reservations->sortByDesc('count');
@@ -31,6 +32,7 @@ class PassengerController extends Controller
         // Pass data to the view
         return view('passenger.frequent-routes', compact('sortedFrequentRoutes'));
     }
+
 
     public function searchSavedRoute(FrequentRoute $route)
     {

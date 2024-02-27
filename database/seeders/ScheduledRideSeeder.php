@@ -9,6 +9,6 @@ class ScheduledRideSeeder extends Seeder
 {
     public function run()
     {
-        ScheduledRide::factory()->times(100)->create();
+        ScheduledRide::factory()->times(50)->create();
     }
 }

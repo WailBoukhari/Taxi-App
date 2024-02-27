@@ -29,14 +29,16 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // Redirect the user based on their role
-        if ($request->role_id == 1) {
-            return redirect()->route('passenger.dashboard'); // Redirect passenger to passenger dashboard
-        } elseif ($request->role_id == 2) {
-            return redirect()->route('driver.dashboard'); // Redirect driver to driver dashboard
-        } else {
-            return redirect()->route('admin.dashboard'); // Redirect driver to driver dashboard
+        $user = Auth::user();
 
+        if ($user->hasRole('Admin')) {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->hasRole('Passenger')) {
+            return redirect()->route('passenger.dashboard');
+        } elseif ($user->hasRole('Driver')) {
+            return redirect()->route('driver.dashboard');
+        } else {
+            return redirect()->route('dashboard');
         }
     }
 

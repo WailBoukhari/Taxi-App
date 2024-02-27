@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Driver;
 use App\Models\Rating;
-use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;

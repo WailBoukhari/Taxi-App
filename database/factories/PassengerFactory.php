@@ -16,7 +16,7 @@ class PassengerFactory extends Factory
 
         // Create a user with a predefined password
         $user = User::factory()->create([
-            'password' => bcrypt('passenger123'), // Set the password to "passenger123"
+            'password' => bcrypt('passenger123'),
         ]);
 
         // Assign the "passenger" role to the user
